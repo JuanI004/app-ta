@@ -40,3 +40,35 @@
     transform: scale(0.985);
   }
 }
+
+@keyframes taPopIn {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes taFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--ta-float-rot, -8deg));
+  }
+  50% {
+    transform: translateY(-12px) rotate(var(--ta-float-rot, -8deg));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
