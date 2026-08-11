@@ -5,8 +5,9 @@ const ICON_SIZE = 35;
 const COLUMNS = 26;
 const ROWS = 18;
 
-export default function HourglassBackground() {
+export default function HourglassBackground({ tone = "light" }) {
   const cells = Array.from({ length: COLUMNS * ROWS });
+  const tintClass = tone === "dark" ? "brightness-0" : "brightness-0 invert";
 
   return (
     <div
@@ -21,7 +22,7 @@ export default function HourglassBackground() {
           <img
             src={hourglassImg}
             alt=""
-            className="brightness-0 invert -rotate-[30deg]"
+            className={`${tintClass} -rotate-[30deg]`}
             style={{ width: ICON_SIZE, height: ICON_SIZE }}
           />
         </div>

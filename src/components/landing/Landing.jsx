@@ -133,7 +133,13 @@ export default function Landing({ onJugar }) {
           onClick={onJugar}
           className="mt-3 hover:cursor-pointer text-2xl w-full font-cta text-[#FFF7E8] py-5 border-4 border-[#17313B] shadow-[0_8px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150 bg-[#F4442E] rounded-full animate-[taPulse_2.4s_ease-in-out_infinite,taPopIn_0.6s_ease-out_both] [animation-delay:0.3s]"
         >
-          Jugar ahora
+          Jugar offline
+        </button>
+        <button
+          onClick={onJugar}
+          className="mt-3 mb-15 hover:cursor-pointer text-2xl w-full font-cta text-[#17313B] py-5 border-4 border-[#17313B] shadow-[0_8px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150 bg-[#ffc800] rounded-full animate-[taPulse_2.4s_ease-in-out_infinite,taPopIn_0.6s_ease-out_both] [animation-delay:0.3s]"
+        >
+          Jugar online
         </button>
       </main>
 
