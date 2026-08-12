@@ -2,12 +2,13 @@ import { useState } from "react";
 import Landing from "./components/landing/Landing";
 import CategoriasPage from "./components/categorias/CategoriasPage";
 import EquiposPage from "./components/equipos/EquiposPage";
+import JuegoPage from "./components/juego/JuegoPage";
 
 function App() {
   const [screen, setScreen] = useState("landing");
   const [sessionInfo, setSessionInfo] = useState({
     categoria: null,
-    equipo: null,
+    teams: null,
   });
 
   function handleSelectCategoria(categoria) {
@@ -26,6 +27,15 @@ function App() {
     <EquiposPage
       categoria={sessionInfo.categoria}
       onBack={() => setScreen("categorias")}
+      onStartGame={(teams) => {
+        setSessionInfo((prev) => ({ ...prev, teams }));
+        setScreen("juego");
+      }}
+    />
+  ) : screen === "juego" ? (
+    <JuegoPage
+      config={{ teams: sessionInfo.teams, boardLength: 30, turnDuration: 60 }}
+      onExit={() => setScreen("landing")}
     />
   ) : null;
 }

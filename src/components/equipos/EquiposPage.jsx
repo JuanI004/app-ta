@@ -6,7 +6,6 @@ const TEAM_THEMES = [
   { color: "#f4442e", textColor: "#fff7e8" },
   { color: "#ffc800", textColor: "#17313b" },
   { color: "#17313b", textColor: "#fff7e8" },
-  { color: "#0f5462", textColor: "#fff7e8" },
 ];
 
 const CARD_TILTS = ["rotate-1", "-rotate-2", "rotate-2", "-rotate-1"];
@@ -20,7 +19,7 @@ function distributeTeams(totalPlayers, teamCount) {
   );
 }
 
-export default function EquiposPage({ categoria, onBack }) {
+export default function EquiposPage({ categoria, onBack, onStartGame }) {
   const [players, setPlayers] = useState(4);
   const [teams, setTeams] = useState(2);
   const [playerNames, setPlayerNames] = useState(() =>
@@ -73,6 +72,13 @@ export default function EquiposPage({ categoria, onBack }) {
       return;
     }
     setShowError(false);
+
+    const teams = playerNames.map((players, t) => ({
+      name: `Equipo ${t + 1}`,
+      players,
+    }));
+
+    onStartGame(teams);
   }
 
   return (
