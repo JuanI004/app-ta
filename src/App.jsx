@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Landing from "./components/landing/Landing";
 import CategoriasPage from "./components/categorias/CategoriasPage";
+import EquiposPage from "./components/equipos/EquiposPage";
 
 function App() {
   const [screen, setScreen] = useState("landing");
@@ -22,7 +23,10 @@ function App() {
       onSelectCategoria={handleSelectCategoria}
     />
   ) : screen === "equipos" ? (
-    <h1>Equipos</h1>
+    <EquiposPage
+      categoria={sessionInfo.categoria}
+      onBack={() => setScreen("categorias")}
+    />
   ) : null;
 }
 
