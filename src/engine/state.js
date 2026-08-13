@@ -21,6 +21,7 @@ export function createInitialState({
       descriptorIndex: 0,
       position: 0,
     })),
+    turnNumber: 0,
     currentTeamIndex: 0,
     turn: null,
     lastDiceResult: null,

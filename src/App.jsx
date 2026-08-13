@@ -3,6 +3,7 @@ import Landing from "./components/landing/Landing";
 import CategoriasPage from "./components/categorias/CategoriasPage";
 import EquiposPage from "./components/equipos/EquiposPage";
 import JuegoPage from "./components/juego/JuegoPage";
+import WORD_POOLS_ES from "./engine/data/wordPool.es";
 
 function App() {
   const [screen, setScreen] = useState("landing");
@@ -34,7 +35,12 @@ function App() {
     />
   ) : screen === "juego" ? (
     <JuegoPage
-      config={{ teams: sessionInfo.teams, boardLength: 30, turnDuration: 60 }}
+      config={{
+        teams: sessionInfo.teams,
+        wordPool: WORD_POOLS_ES[sessionInfo.categoria?.slug] ?? [],
+        boardLength: 12,
+        turnDurationSeconds: 60,
+      }}
       onExit={() => setScreen("landing")}
     />
   ) : null;

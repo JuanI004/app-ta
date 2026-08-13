@@ -1,4 +1,6 @@
 import HourglassBackground from "../landing/HourglassBackground";
+import { useGameEngine } from "../../hooks/useGameEngine";
+import { useState, useEffect } from "react";
 
 const TEAM_COLORS = [
   { number: 1, name: "Rojo", color: "#f4442e" },
@@ -7,6 +9,18 @@ const TEAM_COLORS = [
 ];
 
 export default function JuegoPage({ config, onExit }) {
+  const { state, dispatch } = useGameEngine(config);
+  const [wordIndex, setWordIndex] = useState(0);
+  const currentWord = state.turn.words[wordIndex];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      dispatch({ type: "TICK" });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [dispatch]);
+
   return (
     <div className="relative  flex flex-col items-center min-h-screen bg-[#0f5462] overflow-hidden">
       <HourglassBackground tone="light" />
@@ -15,33 +29,47 @@ export default function JuegoPage({ config, onExit }) {
           <div className="flex items-center gap-2">
             <span
               className="h-5 w-5 rounded-full border-2 border-[#17313b] "
-              style={{ backgroundColor: TEAM_COLORS[0].color }}
+              style={{
+                backgroundColor: TEAM_COLORS[state.currentTeamIndex].color,
+              }}
             />
             <div className="flex flex-col -space-y-1">
               <span className="font-bold font-display text-lg text-[#fff7e8]/70 ">
                 Describe
               </span>
-              <h1 className="font-cta text-3xl text-[#ffc800]">Sofía</h1>
+              <h1 className="font-cta text-3xl text-[#ffc800]">
+                {state.turn.descriptorPlayerName}
+              </h1>
               <span className="font-display font-bold text-[#fff7e8] text-lg">
-                Equipo {TEAM_COLORS[0].name}
+                {state.teams[state.currentTeamIndex].name}
               </span>
             </div>
           </div>
           <span className="px-4 py-2 rounded-full border-4 border-[#17313b] bg-[#ffc800] text-[#17313b] font-display font-bold text-lg">
-            Ronda 2
+            Ronda {state.turnNumber}
           </span>
         </div>
         <div className="mt-3 px-10 mb-5 hover:cursor-pointer text-6xl font-cta text-[#f4442e] py-5 border-4 border-[#17313B] shadow-[0_8px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150 bg-[#fff7e8] rounded-full animate-bounce ">
-          0:00
+          {Math.floor(state.turn.timeRemaining / 60)}:
+          {String(state.turn.timeRemaining % 60).padStart(2, "0")}
         </div>
         <div className="mt-3 h-80 w-120 px-10 mb-5 flex flex-col gap-4 items-center justify-center hover:cursor-pointer   py-5 border-6 border-[#17313B] shadow-[0_8px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150 bg-[#f4442e] rounded-[40px]">
           <p className="font-display font-bold text-lg text-[#fff7e8]/70">
-            Palabra 1 de 6
+            Palabra{" "}
+            {state.turn.words.findIndex(
+              (word) => word.id === state.turn.words[0].id,
+            ) + 1}{" "}
+            de 6
           </p>
-          <h1 className="font-cta text-5xl uppercase text-[#fff7e8]">Murga</h1>
+          <h1 className="font-cta text-center text-5xl uppercase text-[#fff7e8]">
+            {currentWord.text}
+          </h1>
         </div>
         <div className="flex w-full mb-8 justify-center gap-3 items-center">
-          <button className="px-4 py-4 rounded-full border-4 border-[#17313b] bg-[#fff7e8] text-[#17313b] font-display font-bold text-lg shadow-[0_6px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150">
+          <button
+            onClick={() => setWordIndex((prev) => Math.max(0, prev - 1))}
+            className="px-4 py-4 rounded-full border-4 border-[#17313b] bg-[#fff7e8] text-[#17313b] font-display font-bold text-lg shadow-[0_6px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -55,10 +83,23 @@ export default function JuegoPage({ config, onExit }) {
           {[...Array(6)].map((_, i) => (
             <span
               key={i}
-              className="h-5 w-5 bg-[#fff7e8] rounded-full border-2 border-[#17313b] "
+              className="h-5 w-5  rounded-full border-2 border-[#17313b] "
+              style={{
+                backgroundColor:
+                  i == wordIndex
+                    ? "#ffc800"
+                    : state.turn.words[i].status === "acertada"
+                      ? "#0f6e56"
+                      : state.turn.words[i].status === "fallada"
+                        ? "#f4442e"
+                        : "#fff7e8",
+              }}
             />
           ))}
-          <button className="px-4 py-4 rounded-full border-4 border-[#17313b] bg-[#fff7e8] text-[#17313b] font-display font-bold text-lg shadow-[0_6px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150">
+          <button
+            onClick={() => setWordIndex((prev) => Math.min(5, prev + 1))}
+            className="px-4 py-4 rounded-full border-4 border-[#17313b] bg-[#fff7e8] text-[#17313b] font-display font-bold text-lg shadow-[0_6px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -70,10 +111,30 @@ export default function JuegoPage({ config, onExit }) {
             </svg>
           </button>
         </div>
-        <button className="mt-3 w-[460px] px-10 mb-2 hover:cursor-pointer text-2xl font-cta text-[#fff7e8] py-5 border-4 border-[#17313B] shadow-[0_8px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150 bg-[#0f6e56] rounded-full ">
+        <button
+          onClick={() => {
+            dispatch({
+              type: "MARK_WORD",
+              wordId: currentWord.id,
+              status: "acertada",
+            });
+            setWordIndex((prev) => Math.min(5, prev + 1));
+          }}
+          className="mt-3 w-[460px] px-10 mb-2 hover:cursor-pointer text-2xl font-cta text-[#fff7e8] py-5 border-4 border-[#17313B] shadow-[0_8px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150 bg-[#0f6e56] rounded-full "
+        >
           ¡Acertada!
         </button>
-        <button className="mt-3 w-[460px] px-10  hover:cursor-pointer text-xl font-cta text-[#17313b] py-5 border-4 border-[#17313B] shadow-[0_8px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150 bg-[#fff7e8]/70 rounded-full ">
+        <button
+          onClick={() => {
+            dispatch({
+              type: "MARK_WORD",
+              wordId: currentWord.id,
+              status: "fallada",
+            });
+            setWordIndex((prev) => Math.min(5, prev + 1));
+          }}
+          className="mt-3 w-[460px] px-10  hover:cursor-pointer text-xl font-cta text-[#17313b] py-5 border-4 border-[#17313B] shadow-[0_8px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150 bg-[#fff7e8]/70 rounded-full "
+        >
           Pasar
         </button>
       </main>

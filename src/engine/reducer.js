@@ -24,6 +24,7 @@ export function startTurn(state, random = Math.random) {
   return {
     ...state,
     phase: "turnActive",
+    turnNumber: state.turnNumber + 1,
     wordPool: remaining,
     usedWords: [...state.usedWords, ...drawn],
     turn: {
