@@ -72,6 +72,27 @@
   }
 }
 
+@keyframes taRoll {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  20% {
+    transform: rotate(90deg) scale(0.85);
+  }
+  40% {
+    transform: rotate(180deg) scale(1.1);
+  }
+  60% {
+    transform: rotate(270deg) scale(0.9);
+  }
+  80% {
+    transform: rotate(340deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
 @keyframes taFloat {
   0%,
   100% {

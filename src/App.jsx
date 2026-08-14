@@ -39,7 +39,7 @@ function App() {
         teams: sessionInfo.teams,
         wordPool: WORD_POOLS_ES[sessionInfo.categoria?.slug] ?? [],
         boardLength: 12,
-        turnDurationSeconds: 60,
+        turnDurationSeconds: 15,
       }}
       onExit={() => setScreen("landing")}
     />

@@ -2,6 +2,7 @@ import HourglassBackground from "../landing/HourglassBackground";
 import { useGameEngine } from "../../hooks/useGameEngine";
 import { useState, useEffect } from "react";
 import ReviewTurno from "./ReviewTurno";
+import DadoPage from "./DadoPage";
 
 const TEAM_COLORS = [
   { number: 1, name: "Rojo", color: "#f4442e" },
@@ -151,6 +152,8 @@ export default function JuegoPage({ config, onExit }) {
         </main>
       ) : state.phase === "turnReview" ? (
         <ReviewTurno state={state} dispatch={dispatch} />
+      ) : state.phase === "diceRoll" ? (
+        <DadoPage state={state} dispatch={dispatch} />
       ) : null}
     </div>
   );

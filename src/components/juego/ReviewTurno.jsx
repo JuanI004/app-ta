@@ -1,13 +1,21 @@
-export default function ReviewTurno({ state, dispatch }) {
-  const TEAM_COLORS = [
-    { number: 1, name: "Rojo", color: "#f4442e" },
-    { number: 2, name: "Amarillo", color: "#ffc800" },
-    { number: 3, name: "Azul", color: "#17313b" },
-  ];
+const STATUS_CYCLE = ["pendiente", "acertada", "fallada"];
 
+function nextStatus(current) {
+  const index = STATUS_CYCLE.indexOf(current);
+  return STATUS_CYCLE[(index + 1) % STATUS_CYCLE.length];
+}
+
+const TEAM_COLORS = [
+  { number: 1, name: "Rojo", color: "#f4442e" },
+  { number: 2, name: "Amarillo", color: "#ffc800" },
+  { number: 3, name: "Azul", color: "#17313b" },
+];
+
+export default function ReviewTurno({ state, dispatch }) {
   const cantAcertadas = state.turn.words.filter(
     (word) => word.status === "acertada",
   ).length;
+  const seAcaboElTiempo = state.turn.timeRemaining <= 0;
 
   return (
     <main className="relative container max-w-[750px] mx-auto pt-6 pb-20 px-4 flex flex-col items-center">
@@ -21,7 +29,7 @@ export default function ReviewTurno({ state, dispatch }) {
           />
           <div className="flex flex-col -space-y-1">
             <span className="font-bold font-display text-lg text-[#fff7e8]/70 ">
-              Describe
+              Describió
             </span>
             <h1 className="font-cta text-3xl text-[#ffc800]">
               {state.turn.descriptorPlayerName}
@@ -31,32 +39,46 @@ export default function ReviewTurno({ state, dispatch }) {
             </span>
           </div>
         </div>
-        <span className="-rotate-2 px-4 py-2 rounded-full border-4 border-[#17313b] bg-[#ffc800] text-[#17313b] font-display font-bold text-lg shrink-0">
-          ⌛ Tiempo!
+        <span
+          className="-rotate-2 px-4 py-2 rounded-full border-4 border-[#17313b] font-display font-bold text-lg shrink-0"
+          style={{
+            backgroundColor: seAcaboElTiempo ? "#f4442e" : "#0f6e56",
+            color: "#fff7e8",
+          }}
+        >
+          {seAcaboElTiempo ? "⌛ Se acabó el tiempo" : "✓ ¡Las 6 resueltas!"}
         </span>
       </div>
+
       <div className="w-full max-w-[480px] mb-5 animate-[taPopIn_0.5s_ease-out_both] [animation-delay:0.16s]">
         <div className="h-50 my-10 w-full px-6 sm:px-10 flex flex-col -space-y-3 gap-4 items-center justify-center py-5 border-6 border-[#17313B] shadow-[0_8px_0_#17313B] bg-[#fff7e8] rounded-[40px] overflow-hidden">
-          <p className="font-display font-bold text-lg text-gray-500 text-center">
+          <p className="font-display font-bold text-lg text-[#17313b]/60 text-center">
             Resultado de la ronda
           </p>
-          <h1 className="font-cta text-center text-4xl  text-[#17313b] animate-[taPopIn_0.25s_ease-out_both]">
-            <span className="text-6xl text-[#0f6e56]">{cantAcertadas}</span> de
-            6
+          <h1 className="font-cta text-center text-4xl text-[#17313b] animate-[taPopIn_0.3s_ease-out_both] [animation-delay:0.24s]">
+            <span className="text-6xl text-[#0f6e56]">{cantAcertadas}</span> de{" "}
+            {state.turn.words.length}
           </h1>
-          <p className="font-display font-bold text-lg text-gray-800 text-center">
+          <p className="font-display font-bold text-lg text-[#17313b] text-center">
             acertadas
           </p>
         </div>
-        <div className="flex w-full  flex-col gap-2">
+
+        <div className="flex w-full flex-col gap-2">
           <p className="font-display font-bold text-lg text-[#fff7e8]/70 ">
             Tocá una palabra para corregirla
           </p>
           <ul className="flex flex-col gap-4">
-            {state.turn.words.map((word) => (
+            {state.turn.words.map((word, i) => (
               <li
                 key={word.id}
-                className="border-6 py-5 px-4 border-[#17313B] shadow-[0_8px_0_#17313B]  rounded-[25px]"
+                onClick={() => {
+                  dispatch({
+                    type: "REVIEW_UPDATE_WORD",
+                    wordId: word.id,
+                    status: nextStatus(word.status),
+                  });
+                }}
                 style={{
                   backgroundColor:
                     word.status === "acertada"
@@ -65,18 +87,14 @@ export default function ReviewTurno({ state, dispatch }) {
                         ? "#f4442e"
                         : "#fff7e8",
                   color: word.status === "pendiente" ? "#17313b" : "#fff7e8",
+                  animationDelay: `${0.28 + i * 0.06}s`,
                 }}
-                onClick={() => {
-                  dispatch({
-                    type: "toggleWordStatus",
-                    payload: { wordId: word.id },
-                  });
-                }}
+                className="cursor-pointer border-6 py-5 px-4 border-[#17313B] shadow-[0_8px_0_#17313B] rounded-[25px] hover:-translate-y-1 hover:shadow-[0_10px_0_#17313B] active:translate-y-1 active:shadow-[0_3px_0_#17313B] transition-transform duration-150 animate-[taPopIn_0.4s_ease-out_both]"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <span
-                      className="font-display bg-[#fff7e8] py-1 px-3 border-3 border-[#17313b] rounded-full font-bold text-xl"
+                      className="font-display bg-[#fff7e8] h-12 w-12 flex items-center justify-center border-3 border-[#17313b] rounded-full font-bold text-2xl shrink-0"
                       style={{
                         color:
                           word.status === "acertada"
@@ -92,11 +110,11 @@ export default function ReviewTurno({ state, dispatch }) {
                           ? "✗"
                           : "?"}
                     </span>
-                    <h2 className="font-display uppercase font-bold text-lg text-[#17313b]">
+                    <h2 className="font-display uppercase font-bold text-lg">
                       {word.text}
                     </h2>
                   </div>
-                  <p className="font-display font-semibold text-[#17313b]/70">
+                  <p className="font-display font-semibold opacity-70 shrink-0">
                     {word.status === "acertada"
                       ? "Acertada"
                       : word.status === "fallada"
@@ -107,7 +125,10 @@ export default function ReviewTurno({ state, dispatch }) {
               </li>
             ))}
           </ul>
-          <button className=" mt-10 hover:cursor-pointer text-2xl font-cta text-[#fff7e8] py-5 border-4 border-[#17313B] shadow-[0_8px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150 bg-[#f4442e] rounded-full">
+          <button
+            onClick={() => dispatch({ type: "CONFIRM_REVIEW" })}
+            className="mt-10 hover:cursor-pointer text-2xl font-cta text-[#fff7e8] py-5 border-4 border-[#17313B] shadow-[0_8px_0_#17313B] hover:-translate-y-1 hover:shadow-[0_12px_0_#17313B] active:translate-y-1 active:shadow-[0_2px_0_#17313B] transition-transform duration-150 bg-[#f4442e] rounded-full animate-[taPopIn_0.4s_ease-out_both] [animation-delay:0.6s]"
+          >
             Confirmar
           </button>
         </div>
