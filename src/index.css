@@ -93,6 +93,18 @@
   }
 }
 
+@keyframes taHop {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(-14px) scale(1.25);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
 @keyframes taFloat {
   0%,
   100% {

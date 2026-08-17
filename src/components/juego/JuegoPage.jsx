@@ -21,7 +21,7 @@ export default function JuegoPage({ config, onExit }) {
     const timer = setInterval(() => {
       dispatch({ type: "TICK" });
     }, 1000);
-
+    setWordIndex(0);
     return () => clearInterval(timer);
   }, [dispatch]);
 
