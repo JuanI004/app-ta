@@ -3,6 +3,7 @@ import { useGameEngine } from "../../hooks/useGameEngine";
 import { useState, useEffect } from "react";
 import ReviewTurno from "./ReviewTurno";
 import DadoPage from "./DadoPage";
+import GameOverPage from "./GameOverPage";
 
 const TEAM_COLORS = [
   { number: 1, name: "Rojo", color: "#f4442e" },
@@ -154,6 +155,8 @@ export default function JuegoPage({ config, onExit }) {
         <ReviewTurno state={state} dispatch={dispatch} />
       ) : state.phase === "diceRoll" ? (
         <DadoPage state={state} dispatch={dispatch} />
+      ) : state.phase === "gameOver" ? (
+        <GameOverPage state={state} onExit={onExit} />
       ) : null}
     </div>
   );
