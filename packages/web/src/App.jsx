@@ -3,7 +3,7 @@ import Landing from "./components/landing/Landing";
 import CategoriasPage from "./components/categorias/CategoriasPage";
 import EquiposPage from "./components/equipos/EquiposPage";
 import JuegoPage from "./components/juego/JuegoPage";
-import WORD_POOLS_ES from "./engine/data/wordPool.es";
+import WORD_POOLS_ES from "../../engine/src/data/wordPool.es";
 
 function App() {
   const [screen, setScreen] = useState("landing");

@@ -1,7 +1,7 @@
 import { useReducer } from "react";
-import { createInitialState } from "../engine/state";
-import { startTurn } from "../engine/reducer";
-import { gameReducer } from "../engine/gameReducer";
+import { createInitialState } from "../../../engine/src/state";
+import { startTurn } from "../../../engine/src/reducer";
+import { gameReducer } from "../../../engine/src/gameReducer";
 
 function init(config) {
   return startTurn(createInitialState(config));

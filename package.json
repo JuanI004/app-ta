@@ -1,0 +1,7 @@
+{
+  "name": "ta-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
